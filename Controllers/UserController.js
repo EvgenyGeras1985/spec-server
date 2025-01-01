@@ -10,13 +10,13 @@ const { Op } = require("sequelize");
 class UserController{
     async registration(req, res,next){
         try{
-            const { email, phone, password } = req.body;
+            const {name, surname,patronymics, email, phone, password} = req.body;
             // const {img} = req.files;
             // let fileName = uuid.v4() + ".jpg";
             // img.mv(path.resolve(__dirname, '..', 'static', fileName))
 
             if(!email || !password) {
-                return next(ApiError.badRequest('Not correct mail or pass'))
+                return next(ApiError.badRequest(''))
             }
 
             const candidate = await User.findOne({
@@ -32,11 +32,14 @@ class UserController{
             const hashPassword = await bcrypt.hash(password, 5);
 
             const user = await User.create({
+                name,
+                surname,
+                patronymics,
                 email,
                 phone,
                 password: hashPassword,
                 // img: fileName
-            },{fields:['email','phone', 'password']});
+            },{fields:['email','phone', 'password','name', 'surname','patronymics']});
 
 
             const token = jwt.sign({
@@ -77,29 +80,40 @@ class UserController{
             }
             const token = jwt.sign({
                     id:candidate.id,
-                    email:candidate.mail,
+                    email:candidate.email,
                     role:candidate.role
                 },
                 process.env.SECRET_KEY,
                 {expiresIn: '2h'}
             )
-            return res.json({token})
+            return res.json({token, text: 'Вы успешно вошли в аккаунт', role: candidate.role })
 
         }catch (err){
             next(ApiError.badRequest(err.message))
         };
     }
 
-    async userAuth(req, res, next){
-        try{
-            const {id} = req.query;
-            if(!id){
-               return next(ApiError.badRequest("ID не указан wow"))
-            }
-            res.json(id);
-        }catch (err){
+    async userAuth(req, res){
+        // Get token value to the json body
+        const token = req.body.token;
 
-        };
+        // If the token is present
+        if(token){
+
+            // Verify the token using jwt.verify method
+            const decode = jwt.verify(token, process.env.SECRET_KEY);
+
+            //  Return response with decode data
+            res.json({
+                data: decode
+            });
+        }else{
+
+            // Return response with error
+            res.json({
+                data: 'error'
+            });
+        }
     }
 }
 
