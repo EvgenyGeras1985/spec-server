@@ -12,7 +12,7 @@ const User = sequelize.define('user', {
     role: {type:DataTypes.STRING, defaultValue: "USER"}
 })
 
-const Good = sequelize.define('good', {
+const Goods = sequelize.define('good', {
     id:{type:DataTypes.INTEGER,primaryKey:true,autoIncrement:true},
     img:{type: DataTypes.STRING},
     title: {type:DataTypes.STRING},
@@ -24,12 +24,32 @@ const Good = sequelize.define('good', {
     certificate: {type:DataTypes.STRING},
     passport: {type:DataTypes.STRING},
     price: {type:DataTypes.INTEGER},
+    category_id:{type: DataTypes.INTEGER},
+})
 
+const Category = sequelize.define('Category', {
+    id:{type:DataTypes.INTEGER,primaryKey:true,autoIncrement:true},
+    category_id:{type: DataTypes.INTEGER},
+})
+
+const Comments = sequelize.define('comments', {
+    id:{type:DataTypes.INTEGER,primaryKey:true,autoIncrement:true},
+    user_id:{type: DataTypes.INTEGER},
+    good_id: {type:DataTypes.INTEGER},
+})
+
+const Likes = sequelize.define('likes', {
+    id:{type:DataTypes.INTEGER,primaryKey:true,autoIncrement:true},
+    user_id:{type: DataTypes.INTEGER},
+    good_id: {type:DataTypes.INTEGER},
 })
 
 module.exports = {
     User,
-    Good,
+    Goods,
+    Comments,
+    Likes,
+    Category,
 }
 
 
