@@ -14,8 +14,8 @@ const User = sequelize.define('user', {
 
 const Goods = sequelize.define('good', {
     id:{type:DataTypes.INTEGER,primaryKey:true,autoIncrement:true},
-    img:{type: DataTypes.STRING},
-    title: {type:DataTypes.STRING},
+    image:{type: DataTypes.STRING},
+    name: {type:DataTypes.STRING},
     category: {type:DataTypes.STRING},
     article : {type:DataTypes.INTEGER},
     manufacturer: {type:DataTypes.STRING},
@@ -24,7 +24,7 @@ const Goods = sequelize.define('good', {
     certificate: {type:DataTypes.STRING},
     passport: {type:DataTypes.STRING},
     price: {type:DataTypes.INTEGER},
-    category_id:{type: DataTypes.INTEGER},
+    category_id:{type: DataTypes.INTEGER,},
 })
 
 const Category = sequelize.define('Category', {

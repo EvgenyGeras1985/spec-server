@@ -11,9 +11,6 @@ class UserController{
     async registration(req, res,next){
         try{
             const {name, surname,patronymics, email, phone, password} = req.body;
-            // const {img} = req.files;
-            // let fileName = uuid.v4() + ".jpg";
-            // img.mv(path.resolve(__dirname, '..', 'static', fileName))
 
             if(!email || !password) {
                 return next(ApiError.badRequest(''))
@@ -38,7 +35,6 @@ class UserController{
                 email,
                 phone,
                 password: hashPassword,
-                // img: fileName
             },{fields:['email','phone', 'password','name', 'surname','patronymics']});
 
 
