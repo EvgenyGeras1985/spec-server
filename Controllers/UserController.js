@@ -1,4 +1,5 @@
 const {User} = require("../models/models");
+const {Cart} = require("../models/models");
 const ApiError = require("../Error/ApiError");
 const path = require("path");
 const uuid = require("uuid");
@@ -36,6 +37,12 @@ class UserController{
                 phone,
                 password: hashPassword,
             },{fields:['email','phone', 'password','name', 'surname','patronymics']});
+
+            const cart = await Cart.create({
+                userId: user.id
+            })
+
+            res.json(cart)
 
 
             const token = jwt.sign({
@@ -82,7 +89,16 @@ class UserController{
                 process.env.SECRET_KEY,
                 {expiresIn: '2h'}
             )
-            return res.json({token, text: 'Вы успешно вошли в аккаунт', role: candidate.role })
+            return res.json({
+                token,
+                text: 'Вы успешно вошли в аккаунт',
+                name: candidate.name,
+                surname: candidate.surname,
+                patronymics: candidate.patronymics,
+                id:candidate.id,
+                cart_id:candidate.id,
+                role: candidate.role
+            })
 
         }catch (err){
             next(ApiError.badRequest(err.message))
@@ -98,10 +114,17 @@ class UserController{
 
             // Verify the token using jwt.verify method
             const decode = jwt.verify(token, process.env.SECRET_KEY);
+            const user = decode.id;
+            const candidate = await User.findOne({
+                where: {
+                    id: user
+                }
+            })
+            console.log(candidate)
 
             //  Return response with decode data
             res.json({
-                data: decode
+                data: candidate,
             });
         }else{
 
@@ -109,6 +132,18 @@ class UserController{
             res.json({
                 data: 'error'
             });
+        }
+    }
+
+    async getUserById(req,res,next){
+        try{
+            const { id } = req.body
+
+            const user = await User.findByPk({
+
+            })
+        }catch (err){
+            console.log(err)
         }
     }
 }

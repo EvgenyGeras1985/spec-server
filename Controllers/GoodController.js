@@ -5,6 +5,14 @@ const ApiError = require("../Error/ApiError");
 
 
 class GoodController{
+    async GetOne(req,res,next){
+       const { id } =req.body
+
+        const good = await Goods.findOne({
+            where: id
+        })
+        return res.json(good)
+    }
     async GetAllGood(req,res){
         try {
             const goods = await Goods.findAll()
@@ -16,7 +24,7 @@ class GoodController{
     async addGood(req, res,next){
         try{
             console.log('server func addGood start...')
-            const {name, category,article, manufacturer, warranty, description, price} = req.body;
+            const {name, category,article,total_quantity, manufacturer, warranty, description, price, } = req.body;
 
             const { image , certificate, passport} = req.files;
             console.log(req.files)
@@ -31,7 +39,7 @@ class GoodController{
             let fileName2 = uuid.v4() + ".docx";
             passport.mv(path.resolve(__dirname, '..', 'static', fileName2))
 
-            const good = await Goods.create({name,category,article,manufacturer,warranty,description, price: +price, image:fileName, certificate:fileName1, passport:fileName2})
+            const good = await Goods.create({name,category,article,manufacturer,warranty,description, price: +price,total_quantity: +total_quantity, image:fileName, certificate:fileName1, passport:fileName2})
             return res.json(good);
 
         }catch(err){
