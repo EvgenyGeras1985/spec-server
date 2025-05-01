@@ -17,7 +17,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 //say that files from folder Static gave as images
-app.use(express.static(path.resolve(__dirname, 'static')))
+app.use('/static',express.static( 'static'));
 app.use(fileUpload({}));
 app.use('/api', router);
 
